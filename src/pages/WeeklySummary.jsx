@@ -18,7 +18,6 @@ function WeeklySummary() {
   const [hasJournal, setHasJournal] = useState(false);
   const [journalId, setJournalId] = useState(null);
   const [useAI, setUseAI] = useState(true); // Default to using AI
-  const [aiProvider, setAiProvider] = useState('gemini'); // Default to Gemini
   
   // Use a single state object for week-related data
   const [weekData, setWeekData] = useState({
@@ -170,7 +169,7 @@ function WeeklySummary() {
     try {
       if (useAI) {
         // Use AI to generate summary
-        const aiSummary = await AIService.generateSummary(weekData, aiProvider);
+        const aiSummary = await AIService.generateSummary(weekData, 'gemini');
         setSummary(aiSummary);
       } else {
         // Create a manual structured summary based on daily logs
@@ -346,42 +345,6 @@ function WeeklySummary() {
                   </label>
                 </div>
                 
-                {useAI && (
-                  <div className="ml-6 space-y-3">
-                    <p className="text-xs text-gray-500 dark:text-gray-400">Select AI Provider:</p>
-                    <div className="flex flex-col space-y-2">
-                      <div className="flex items-center p-2 rounded-lg hover:bg-white/30 dark:hover:bg-dark-surface/30">
-                        <input
-                          type="radio"
-                          id="providerGemini"
-                          name="aiProvider"
-                          value="gemini"
-                          checked={aiProvider === 'gemini'}
-                          onChange={() => setAiProvider('gemini')}
-                          className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300"
-                        />
-                        <label htmlFor="providerGemini" className="ml-2 text-sm text-gray-700 dark:text-gray-300">
-                          Gemini
-                        </label>
-                      </div>
-                      <div className="flex items-center p-2 rounded-lg hover:bg-white/30 dark:hover:bg-dark-surface/30">
-                        <input
-                          type="radio"
-                          id="providerOpenAI"
-                          name="aiProvider"
-                          value="openai"
-                          checked={aiProvider === 'openai'}
-                          onChange={() => setAiProvider('openai')}
-                          className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300"
-                        />
-                        <label htmlFor="providerOpenAI" className="ml-2 text-sm text-gray-700 dark:text-gray-300">
-                          OpenAI
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                )}
-                
                 <button
                   onClick={generateSummary}
                   disabled={isGenerating || weekData.weeklyHours === 0}
@@ -396,7 +359,7 @@ function WeeklySummary() {
                       Generating...
                     </span>
                   ) : (
-                    `Generate Summary${useAI ? ' with ' + (aiProvider === 'gemini' ? 'Gemini' : 'OpenAI') : ''}`
+                    `Generate ${useAI ? 'AI' : ''} Summary`
                   )}
                 </button>
                 

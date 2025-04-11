@@ -8,8 +8,15 @@ import { useState, useEffect, useRef } from 'react';
  * @param {Function} props.onChange Callback function when text changes
  * @param {string} props.placeholder Placeholder text for the display area
  * @param {boolean} props.disabled Whether the recorder is disabled
+ * @param {boolean} props.autoTranscribe Whether to automatically transcribe voice to text
  */
-function VoiceRecorder({ value, onChange, placeholder = "Speak to record your activities...", disabled = false }) {
+function VoiceRecorder({ 
+  value, 
+  onChange, 
+  placeholder = "Speak to record your activities...", 
+  disabled = false,
+  autoTranscribe = true // Added autoTranscribe prop with default value true
+}) {
   const [isRecording, setIsRecording] = useState(false);
   const [isSupported, setIsSupported] = useState(true);
   const [interimTranscript, setInterimTranscript] = useState('');
@@ -485,7 +492,7 @@ function VoiceRecorder({ value, onChange, placeholder = "Speak to record your ac
                 <div className={`h-2 w-2 ${isRetrying ? 'bg-yellow-500' : 'bg-primary-600'} rounded-full animate-bounce`} style={{ animationDelay: '0.4s' }}></div>
               </div>
               <span className="ml-2 text-xs text-gray-500">
-                {isRetrying ? 'Reconnecting...' : 'Recording...'}
+                {isRetrying ? 'Reconnecting...' : 'Listening and transcribing...'}
               </span>
             </div>
           )}
@@ -549,13 +556,19 @@ function VoiceRecorder({ value, onChange, placeholder = "Speak to record your ac
 
       <div className="flex justify-between items-center mt-2">
         <div className="text-xs text-gray-500">
-          {!isRecording && (
+          {!isRecording ? (
             <span>
               {!navigator.onLine 
                 ? "Voice recording is unavailable while offline" 
                 : persistentNetworkIssue
                   ? "Network issues detected with speech recognition"
-                  : "Click the microphone to start recording"}
+                  : autoTranscribe
+                    ? "Click the microphone to start recording - your speech will be automatically transcribed to text"
+                    : "Click the microphone to start recording"}
+            </span>
+          ) : (
+            <span className="text-primary-600 font-medium">
+              {autoTranscribe ? "Speaking will automatically be converted to text" : "Recording in progress..."}
             </span>
           )}
         </div>
