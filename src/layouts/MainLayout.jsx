@@ -263,17 +263,6 @@ function MainLayout() {
         )}
       </header>
 
-      {/* Page title and breadcrumbs */}
-      {location.pathname !== '/dashboard' && (
-        <div className="bg-white dark:bg-gray-800 shadow-sm">
-          <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
-            <h1 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-              {navItems.find(item => item.path === location.pathname)?.name || 'Page'}
-            </h1>
-          </div>
-        </div>
-      )}
-
       {/* Main content */}
       <main className="flex-grow">
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
